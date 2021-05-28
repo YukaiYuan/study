@@ -33,7 +33,7 @@ AppClassLoader:Java编写,加载程序所在目录
 类加载器的双亲委派机制
 1.自下而上检查类加载器是否已经加载
 2.自上而下尝试加载类(在指定目录寻找是否有对应Class)
-查看classLoader loadClass()源码
+查看classLoader -> loadClass()源码
 
 为什么要使用双亲委派机制去加载类
 避免多份同样字节码加载
