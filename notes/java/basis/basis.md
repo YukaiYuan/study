@@ -13,9 +13,9 @@ Java反射机制是在运行状态中,对于任意一个类都能够知道这个
 优点:使代码更加灵活
 缺点:安全隐患,比如可以无视泛型的安全检查(泛型的安全检查发生在编译时);性能较差(实际影响不大)
 获取class的四种方式
-1.Class c = Object.class;
+1.Class c = Object.class; //不会初始化
 2.Class.forName("com.yyk.iv.xxx"); //对class进行了初始化静态代码块会被执行,静态变量会进行初始化
-3.Class c = ClassLoader.loadCla("com.yyk.iv.xxx");
+3.Class c = ClassLoader.loadCla("com.yyk.iv.xxx"); //不会初始化
 4.Object o = new Object();
   o.getClass;
 框架中的动态代理也是依赖反射来实现的;
