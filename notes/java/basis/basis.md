@@ -20,4 +20,30 @@ Java反射机制是在运行状态中,对于任意一个类都能够知道这个
   o.getClass;
 框架中的动态代理也是依赖反射来实现的;
 
+ClassLoader
+主要工作在Class装载的加载阶段,主要作用是从系统外部获得Class二进制数据流.它是Java的核心组件,所有的Class都是由ClassLoader进行加载的,ClassLoader负责通过将class文件的二进制数据流装载进系统,然后交给虚拟机进行连接、初始化等操作.
+主要方法 loadClass();
+ClassLoader的种类
+BootStrapClassLoader: c++编写,加载核心库java.*
+ExtClassLoader:Java编写,加载扩展库javax.*
+AppClassLoader:Java编写,加载程序所在目录
+自定义ClassLoader的实现
+关键函数 findClass()  defineClass();
+
+类加载器的双亲委派机制
+1.自下而上检查类加载器是否已经加载
+2.自上而下尝试加载类(在指定目录寻找是否有对应Class)
+查看classLoader loadClass()源码
+
+为什么要使用双亲委派机制去加载类
+避免多份同样字节码加载
+
+类的加载方式
+隐式加载:new  //不需要newInstance()即可获得对象
+显式加载:loadClass,forName等
+
+类的装载过程
+1.加载 ClassLoader加载class字节码,生成Class对象
+2.链接 校验:检查加载的class的正确性和安全性 准备:为类变量分配存储空间并设置类变量初始值 解析:JVM将常量池内的符号引用转换为直接引用
+3.初始化 执行类变量赋值和静态代码块
 
