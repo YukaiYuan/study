@@ -24,13 +24,13 @@ JVM内存模型-JDK8
     操作数栈:入栈、出栈、复制、交换、产生消费变量
 3.本地方法栈
   和虚拟机栈类似,调用native方法时使用本地方法栈
+  
+递归为什么会引起stackOverFlowError
+一个方法的执行就代表一个栈帧的入栈和出栈,当递归过深,栈帧数超出虚拟机栈深度,造成stackOverFlowError
 
 线程共享
 MetaSpace(元空间 1.8以后)
 堆(包含常量池)
-
-递归为什么会引起stackOverFlowError
-一个方法的执行就代表一个栈帧的入栈和出栈,当递归过深,栈帧数超出虚拟机栈深度,造成stackOverFlowError
 
 元空间(MetaSpace 1.8) 与永久代(PermGen 1.7或之前版本)的区别,均是方法区的实现(方法区只是一种JVM的规范),存储Class的属性(Method、Field等)
   元空间使用本地内存,永久代使用的时JVM的内存
@@ -113,6 +113,31 @@ GC的分类
 Minor GC:年轻代GC
 Full GC:老年代的GC往往伴随着年轻代的GC
 
+年轻代:尽可能快速的收集掉那些生命周期短的对象
+Eden,SurvivorTo,SurvivorFrom
+没经过一次Minor GC对象的分代年龄+1,年龄到一定值后会晋升到老年代(默认15, 通过 -XX:MaxTenuringThreshold 可设置晋升年龄)
+
+对象如何晋升到老年代
+1.经历一定Minor次数依然存活的对象
+2.Survivor区或Eden区放不下的对象,直接在老年代中生成
+3.新生成的大对象(-XX:+PretenuerSizeThreshold)
+
+常用的调优参数
+-XX:SurvivorRatio:Eden和一个Survivor的比值,默认8:1
+-XX:NewRatio:老年代和年轻代内存大小的比例
+-XX:MaxTenuringThreshold:晋升年龄
+
+老年代:存放生命周期较长的对象
+FullGC 和MajorGC
+FullGC比MinorGC执行慢,出发频率低
+
+触发FullGC的条件
+1.老年代空间不足
+2.永久代空间不足
+3.CMS GC时出现promotion failed,concurrent mode failure
+4.MinorGC晋升到老年代的平均大小大于老年代的剩余空间
+5.调用System.gc();
+6.使用RMI来进行RPC或管理的JDK应用,默认每小时执行一次FullGC
 
 
 
