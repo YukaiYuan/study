@@ -174,7 +174,41 @@ G1(Garbage First)收集器(-XX:+UseG1GC,年轻代老年代共用,复制+标记-�
  会将整个Java堆内存划分成多个大小相等的Region
  年轻代和老年代不再物理隔离
  
+Object的finalize()方法的作用是否与C++的析构函数作用相同
+当对象变成(GC Roots)不可达时，GC会判断该对象是否覆盖了finalize方法，若未覆盖，则直接将其回收。否则，若对象未执行过finalize方法，将其放入F-Queue队列，由一低优先级线程执行该队列中对象的finalize方法。执行finalize方法完毕后，GC会再次判断该对象是否可达，若不可达，则进行回收，否则，对象“复活”。
 
+Java中的强引用,软引用,弱引用,虚引用有什么用
+强引用(Strong Reference)
+  最普遍的引用:Object obj = new Object();
+  抛出OOM终止程序也不会回收具有强引用的对象
+  可通过将对象设置为null来弱化引用,使其被回收
+软引用(Soft Reference)
+  对象处在有用但非必须的状态
+  当内存空间不足时,GC会回收该引用的对象的内存
+  可以来实现高速缓存
+  String str = new String("abc");//强引用
+  SoftReference<String> softRef = new SoftReference<String>(str);//软引用
+弱引用(Weak Reference)
+  非必须的对象,比软引用更弱一些
+  GC时会被回收
+  被回收的概率也不大,因为GC线程的优先级比较低
+  适用于引用偶尔被使用且不影响垃圾回收的对象
+  String str = new String("abc");//强引用
+  WeakReference<String> weakRef = new WeakReference<String>(str);//弱引用
+虚引用(PhantomReference)
+  不会决定对象的生命周期
+  任何时候都可能被GC
+  跟踪对象被垃圾收集器回收的活动,起标记、哨兵作用
+  必须和引用队列ReferenceQueue联合使用
+  String str = new String("abc");//强引用
+  ReferenceQueue queue = new ReferenceQueue();
+  PhantomReference ref = new PhantomReference(str,queue);//虚引用
+  
+引用队列(ReferenceQueue)
+  无实际存储结构,存储逻辑依赖于内部节点之间的关系来表达
+  存储关联的且被GC的软引用,弱引用及虚引用
+  
+  
 
 
 
