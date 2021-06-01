@@ -139,6 +139,44 @@ FullGC比MinorGC执行慢,出发频率低
 5.调用System.gc();
 6.使用RMI来进行RPC或管理的JDK应用,默认每小时执行一次FullGC
 
+Stop-the-World
+
+SafePoint
+分析过程中对象引用关系不会发送变化的点
+产生SafePoint的点:方法调用;循环跳转;异常跳转等
+
+JVM的运行模式
+Server(启动较慢,运行速度较快,重量级)
+Client(轻量级)
+
+常见的垃圾收集器
+年轻代垃圾收集器:
+Serial收集器(-XX:+UseSerialGC,复制算法):单线程收集,进行垃圾收集时,必须暂停所有工作线程;简单高效,Client模式下默认的年轻代收集器
+ParNew收集器(-XX:+UseParNewGC,复制算法):多线程手机,其余行为、特点和Serial收集器一样;单核效率不如Serial,在多核下执行才有优势
+Parallel Scavenge收集器(-XX:+useParallelGC,复制算法):更关注系统的吞吐量,在多核下执行才有有事,Server模式下默认的年轻代收集器
+
+老年代垃圾收集器
+Serial Old收集器(-XX:UseSerialOldGC,标记-整理算法):单线程手机,进行垃圾收集时,必须暂停所有的工作线程;简单高效,Client模式下默认的老年代收集器
+Parallel Old收集器(-XX:UseParallelOldGC,标记-整理算法):多线程,吞吐量优先
+CMS收集器(-XX:UseConcMarkSweepGC,标记-清楚算法):几乎没有暂停时间(与用户线程并发执行)
+  1.初始标记:stop-the-world
+  2.并发标记:并发追溯标记,程序不会停顿
+  3.并发预清理:查找执行并发标记阶段从年轻代晋升到老年代的对象
+  4.重新标记:暂停虚拟机,扫描CMS堆中的剩余对象
+  5.并发清理:清理垃圾对象,程序不会停顿
+  6.并发重置:重置CMS收集器的数据结构
+  
+G1(Garbage First)收集器(-XX:+UseG1GC,年轻代老年代共用,复制+标记-整理算法):
+  1.并发和并行
+  2.分代收集
+  3.空间整合
+  4.可预测的停顿
+ 会将整个Java堆内存划分成多个大小相等的Region
+ 年轻代和老年代不再物理隔离
+ 
+
+
+
 
 
 
