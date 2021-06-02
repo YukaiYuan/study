@@ -49,7 +49,24 @@ BeanDefinition
 BeanDefinitionRegistry
   提供向容器注册BeanDefinition对象的方法(看源码)
   
- 
+getBean方法的代码逻辑
+  1.转换BeanName
+  2.从缓存中加载实例
+  3.实例化Bean
+  4.检测parentBeanFactory
+  5.初始化依赖的Bean
+  6.创建Bean
+
+Spring Bean的作用域
+singleton:Spring的默认作用域,容器里拥有唯一的Bean实例
+prototype:针对每个getBean请求,容器都会创建一个Bean实例
+request:会为每个Http请求创建一个Bean实例
+session:会为每个session创建一个Bean实例
+globalSession:会为每个全局HttpSession创建一个Bean实例,该作用域仅对Portlet有效
+
+SpringBean的生命周期
+创建过程
+
 
 
 
